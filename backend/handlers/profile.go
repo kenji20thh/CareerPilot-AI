@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"os"
+	"path/filepath"
 )
 
 func uploadCV(w http.ResponseWriter, r *http.Request) {
@@ -25,4 +26,7 @@ func uploadCV(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	os.Mkdir("uploads", 7055)
+
+	filename := filepath.Base(header.Filename)
+	path := filepath.Join("uploads", filename)
 }
