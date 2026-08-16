@@ -29,4 +29,9 @@ func uploadCV(w http.ResponseWriter, r *http.Request) {
 
 	filename := filepath.Base(header.Filename)
 	path := filepath.Join("uploads", filename)
+
+	dst, err := os.Create(path)
+	if err != nil {
+		http.Error(w, "Could not save file", http.StatusInternalServerError)
+	}
 }
