@@ -10,5 +10,16 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{
 		"status": "ok",
 	})
-
 }
+
+func main() {
+	http.HandleFunc("api/health", healthHandler)
+	println("backend running on server http://localhost:8080")
+
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		panic(err)
+	}
+}
+
+//lool
