@@ -1,6 +1,9 @@
 package handlers
 
-import "net/http"
+import (
+	"net/http"
+	"os"
+)
 
 func uploadCV(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -19,5 +22,7 @@ func uploadCV(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "CV file is required", http.StatusBadRequest)
 		return
 	}
+	defer file.Close()
 
+	os.Mkdir("uploads", 7055)
 }
