@@ -21,5 +21,3 @@ func main() {
 		panic(err)
 	}
 }
-
-//lool
