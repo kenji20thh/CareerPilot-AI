@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -34,4 +35,13 @@ func uploadCV(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Could not save file", http.StatusInternalServerError)
 	}
+	defer dst.Close()
+
+	w.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"success":  true,
+		"filename": filename,
+		"message":  "CV uploaded successfully",
+	})
 }
