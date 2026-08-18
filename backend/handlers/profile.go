@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-func uploadCV(w http.ResponseWriter, r *http.Request) {
+func UploadCV(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -26,7 +26,7 @@ func uploadCV(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	os.Mkdir("uploads", 7055)
+	os.Mkdir("uploads", 0755)
 
 	filename := filepath.Base(header.Filename)
 	path := filepath.Join("uploads", filename)
@@ -34,6 +34,7 @@ func uploadCV(w http.ResponseWriter, r *http.Request) {
 	dst, err := os.Create(path)
 	if err != nil {
 		http.Error(w, "Could not save file", http.StatusInternalServerError)
+		return
 	}
 	defer dst.Close()
 
