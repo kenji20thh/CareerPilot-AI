@@ -26,12 +26,10 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	os.Mkdir("uploads", 0755)
-	if err != nil {
+	if err := os.MkdirAll("uploads", 0755); err != nil {
 		http.Error(w, "Could not create uploads directory", http.StatusInternalServerError)
 		return
 	}
-
 	filename := filepath.Base(header.Filename)
 	path := filepath.Join("uploads", filename)
 

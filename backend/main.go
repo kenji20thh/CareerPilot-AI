@@ -13,7 +13,7 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("api/health", healthHandler)
+	http.HandleFunc("/api/health", healthHandler)
 	println("backend running on server http://localhost:8080")
 
 	err := http.ListenAndServe(":8080", nil)
