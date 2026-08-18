@@ -15,7 +15,7 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
-		http.Error(w, "Could Not Parse From", http.StatusBadRequest)
+		http.Error(w, "Could Not Parse Form", http.StatusBadRequest)
 		return
 	}
 
@@ -27,6 +27,10 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	os.Mkdir("uploads", 0755)
+	if err != nil {
+		http.Error(w, "Could not create uploads directory", http.StatusInternalServerError)
+		return
+	}
 
 	filename := filepath.Base(header.Filename)
 	path := filepath.Join("uploads", filename)
