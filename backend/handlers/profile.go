@@ -33,10 +33,18 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 
 	dst, err := os.Create(path)
 	if err != nil {
+
 		http.Error(w, "Could not save file", http.StatusInternalServerError)
 		return
 	}
+
 	defer dst.Close()
+
+	_, err = dst.ReadFrom(file)
+	if err != nil {
+		http.Error(w, "Could not write file", http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 
