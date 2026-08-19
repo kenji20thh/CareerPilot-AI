@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 )
 
+const maxCVSize = 5 << 20 // 5MB
+
 func UploadCV(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -26,6 +28,12 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
+	// size check now that we actually have `header`
+	if header.Size > maxCVSize {
+		http.Error(w, "File too large (max 5MB)", http.StatusBadRequest)
+		return // <-- this was missing
+	}
+
 	if err := os.MkdirAll("uploads", 0755); err != nil {
 		http.Error(w, "Could not create uploads directory", http.StatusInternalServerError)
 		return
@@ -35,11 +43,9 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 
 	dst, err := os.Create(path)
 	if err != nil {
-
 		http.Error(w, "Could not save file", http.StatusInternalServerError)
 		return
 	}
-
 	defer dst.Close()
 
 	_, err = dst.ReadFrom(file)
@@ -49,7 +55,6 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"success":  true,
 		"filename": filename,
