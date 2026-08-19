@@ -1,6 +1,7 @@
 package main
 
 import (
+	"careerpilot/handlers"
 	"encoding/json"
 	"net/http"
 )
@@ -14,6 +15,7 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/api/health", healthHandler)
+	http.HandleFunc("/api/upload-cv", handlers.UploadCV)
 	println("backend running on server http://localhost:8080")
 
 	err := http.ListenAndServe(":8080", nil)
