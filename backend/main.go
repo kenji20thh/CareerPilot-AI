@@ -15,7 +15,8 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 
 func withCORS(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
+		w.Header().Set("Acess-Control-Allow-Origin", "http://localhost:8080")
+		w.Header().Set("Acess-Control-Allow-Methods", "GET, POST, OPTIONS")
 	}
 }
 
