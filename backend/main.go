@@ -13,6 +13,10 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func withCORS(next http.HandlerFunc) http.HandlerFunc {
+
+}
+
 func main() {
 	http.HandleFunc("/api/health", healthHandler)
 	http.HandleFunc("/api/upload-cv", handlers.UploadCV)
