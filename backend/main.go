@@ -14,7 +14,9 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func withCORS(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
 
+	}
 }
 
 func main() {
