@@ -15,9 +15,9 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 
 func withCORS(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Acess-Control-Allow-Origin", "http://localhost:8080")
-		w.Header().Set("Acess-Control-Allow-Methods", "GET, POST, OPTIONS")
-		w.Header().Set("Acess-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusOK)
@@ -29,8 +29,9 @@ func withCORS(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func main() {
-	http.HandleFunc("/api/health", healthHandler)
-	http.HandleFunc("/api/upload-cv", handlers.UploadCV)
+	http.HandleFunc("/api/health", withCORS(healthHandler))
+	http.HandleFunc("/api/upload-cv", withCORS(handlers.UploadCV))
+
 	println("backend running on server http://localhost:8080")
 
 	err := http.ListenAndServe(":8080", nil)
