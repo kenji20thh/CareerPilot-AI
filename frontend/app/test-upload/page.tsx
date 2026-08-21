@@ -8,3 +8,16 @@ interface uploadResponse {
     message: string;
 
 }
+
+export default function TestUpload{
+    const [file, setFile] = useState<File | null>(null);
+    const [status, setStatus] = useState<string>("");
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!file) {
+            setStatus("Please select a file first")
+            return;
+        }
+    }
+ }
