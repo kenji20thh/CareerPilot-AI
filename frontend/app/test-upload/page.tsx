@@ -19,5 +19,9 @@ export default function TestUpload{
             setStatus("Please select a file first")
             return;
         }
+
+        const formData = new FormData 
+        formData.append("cv", file)
+        
     }
  }
