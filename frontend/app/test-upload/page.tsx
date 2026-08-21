@@ -22,6 +22,12 @@ export default function TestUpload{
 
         const formData = new FormData 
         formData.append("cv", file)
-        
+
+        try {
+            const res = await fetch("http://localhost:8080/test/upload-cv", {
+                method : "POST",
+                body: formData,
+            })
+        }
     }
  }
