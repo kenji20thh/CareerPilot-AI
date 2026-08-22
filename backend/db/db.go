@@ -2,6 +2,7 @@ package db
 
 import (
 	"log"
+	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
@@ -14,5 +15,10 @@ func Connect() {
 	if err != nil {
 		log.Println("No .env file found, relying on system environment variables")
 
+	}
+
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		log.Fatal("database is not set")
 	}
 }
