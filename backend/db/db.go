@@ -27,4 +27,11 @@ func Connect() {
 	if err != nil {
 		log.Fatal("Unable to create connection pool: %v", err)
 	}
+
+	if err := pool.Ping(context.Background()); err != nil {
+		log.Fatal("Unable to reach database: %v", err)
+	}
+
+	Pool = pool
+	log.Println("Connected to database successfully")
 }
