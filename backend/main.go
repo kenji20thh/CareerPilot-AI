@@ -1,6 +1,7 @@
 package main
 
 import (
+	"careerpilot/db"
 	"careerpilot/handlers"
 	"encoding/json"
 	"net/http"
@@ -29,6 +30,8 @@ func withCORS(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func main() {
+	db.Connect()
+
 	http.HandleFunc("/api/health", withCORS(healthHandler))
 	http.HandleFunc("/api/upload-cv", withCORS(handlers.UploadCV))
 
