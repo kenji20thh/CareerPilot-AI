@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -20,5 +21,10 @@ func Connect() {
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
 		log.Fatal("database is not set")
+	}
+
+	pool, err := pgxpool.New(context.Background(), dbURL)
+	if err != nil {
+		log.Fatal("Unable to create connection pool: %v", err)
 	}
 }
