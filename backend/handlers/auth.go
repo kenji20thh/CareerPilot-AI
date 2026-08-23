@@ -21,4 +21,9 @@ func Singup(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid Request Body", http.StatusBadRequest)
 		return
 	}
+
+	if req.Email == "" || req.Password == "" {
+		http.Error(w, "Email and Password required", http.StatusBadRequest)
+		return
+	}
 }
