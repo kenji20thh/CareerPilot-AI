@@ -1,6 +1,9 @@
 package handlers
 
-import "net/http"
+import (
+	"encoding/json"
+	"net/http"
+)
 
 type SignupRequest struct {
 	Email    string `json:"email`
@@ -13,4 +16,9 @@ func Singup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var req SignupRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid Request Body", http.StatusBadRequest)
+		return
+	}
 }
