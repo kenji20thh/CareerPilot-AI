@@ -5,7 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -61,4 +63,12 @@ func Singup(w http.ResponseWriter, r *http.Request) {
 		"userId":  userID,
 		"token":   token,
 	})
+}
+
+func generateJWT(userID string) (string, error) {
+	claims := jwt.MapClaims{
+		"userId": userID,
+		"exp":    time.Now().Add(24 * time.Hour).Unix(),
+	}
+
 }
