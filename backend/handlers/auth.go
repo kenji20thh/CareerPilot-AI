@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -71,4 +72,6 @@ func generateJWT(userID string) (string, error) {
 		"exp":    time.Now().Add(24 * time.Hour).Unix(),
 	}
 
+	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 }
