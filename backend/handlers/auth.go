@@ -43,4 +43,9 @@ func Singup(w http.ResponseWriter, r *http.Request) {
 		"INSERT INTO users(email, password_hash) VALUES ($1, $2) RETURNING id",
 		req.Email, string(hashedPassword),
 	).Scan(&userID)
+
+	if err != nil {
+		http.Error(w, "Could not create user (email might already be taken)", http.StatusBadRequest)
+		return
+	}
 }
