@@ -39,7 +39,7 @@ func Singup(w http.ResponseWriter, r *http.Request) {
 
 	var userID string
 	err = db.Pool.QueryRow(
-		context.Background,
+		context.Background(),
 		"INSERT INTO users(email, password_hash) VALUES ($1, $2) RETURNING id",
 		req.Email, string(hashedPassword),
 	).Scan(&userID)
@@ -54,4 +54,6 @@ func Singup(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not create token", http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set("content-type", "application/json")
 }
