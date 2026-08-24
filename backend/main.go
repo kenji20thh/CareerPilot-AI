@@ -34,6 +34,7 @@ func main() {
 
 	http.HandleFunc("/api/health", withCORS(healthHandler))
 	http.HandleFunc("/api/upload-cv", withCORS(handlers.UploadCV))
+	http.HandleFunc("/api/signup", withCORS(handlers.Singup))
 
 	println("backend running on server http://localhost:8080")
 
