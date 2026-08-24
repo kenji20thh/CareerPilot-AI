@@ -45,7 +45,13 @@ func Singup(w http.ResponseWriter, r *http.Request) {
 	).Scan(&userID)
 
 	if err != nil {
-		http.Error(w, "Could not create user (email might already be taken)", http.StatusBadRequest)
+		http.Error(w, "Could not create user (email might already be taken)", http.StatusConflict)
+		return
+	}
+
+	token, err := generateJWT(userID)
+	if err != nil {
+		http.Error(w, "Could not create token", http.StatusInternalServerError)
 		return
 	}
 }
