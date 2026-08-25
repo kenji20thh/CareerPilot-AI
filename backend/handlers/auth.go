@@ -92,4 +92,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid Request Body", http.StatusBadRequest)
 		return
 	}
+
+	var userID, storedHash string
+	err := db.Pool.QueryRow(
+		context.Background(),
+		"SELECT id, password_hash FROM users where email = $1",
+		req.Email,
+	).Scan(userID, &storedHash)
 }
