@@ -80,3 +80,7 @@ func generateJWT(userID string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 }
+
+func Login(w http.ResponseWriter, r *http.Request) {
+
+}
