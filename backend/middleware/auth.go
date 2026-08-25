@@ -35,5 +35,11 @@ func RequireAuth(next http.HandlerFunc) http.HandlerFunc {
 			http.Error(w, "Invalid or expired tokken", http.StatusUnauthorized)
 			return
 		}
+
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok {
+			http.Error(w, "Invalid token claims", http.StatusUnauthorized)
+			return
+		}
 	}
 }
