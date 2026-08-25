@@ -116,4 +116,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not generate token", http.StatusInternalServerError)
 		return
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"success": true,
+		"token":   token,
+		"userId":  userID,
+	})
 }
