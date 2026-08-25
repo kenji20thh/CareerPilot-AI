@@ -41,5 +41,11 @@ func RequireAuth(next http.HandlerFunc) http.HandlerFunc {
 			http.Error(w, "Invalid token claims", http.StatusUnauthorized)
 			return
 		}
+
+		userID, ok := claims["user_id"].(string)
+		if !ok {
+			http.Error(w, "Invalid token claims", http.StatusUnauthorized)
+			return
+		}
 	}
 }
