@@ -2,7 +2,10 @@ package middleware
 
 import (
 	"net/http"
+	"os"
 	"strings"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type contextKey string
@@ -20,6 +23,16 @@ func RequireAuth(next http.HandlerFunc) http.HandlerFunc {
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
 			http.Error(w, "Invalid Authorization Header Format", http.StatusUnauthorized)
+			return
+		}
+
+		tokenString := parts[1]
+
+		token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+			return []byte(os.Getenv("JWT_SECRET")), nil
+		})
+		if err != nil {
+			http.Error(w, "Invalid or expired tokken", http.StatusUnauthorized)
 			return
 		}
 	}
