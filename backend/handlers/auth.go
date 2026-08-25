@@ -98,7 +98,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		context.Background(),
 		"SELECT id, password_hash FROM users where email = $1",
 		req.Email,
-	).Scan(userID, &storedHash)
+	).Scan(&userID, &storedHash)
 
 	if err != nil {
 		http.Error(w, "Invalid email or password", http.StatusUnauthorized)
