@@ -11,7 +11,7 @@ import (
 
 type contextKey string
 
-const userIDKey contextKey
+const userIDKey contextKey = "userID"
 
 func RequireAuth(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
