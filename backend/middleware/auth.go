@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 	"os"
 	"strings"
@@ -47,5 +48,8 @@ func RequireAuth(next http.HandlerFunc) http.HandlerFunc {
 			http.Error(w, "Invalid token claims", http.StatusUnauthorized)
 			return
 		}
+
+		ctx := context.WithValue(r.Context(), userIDKey, userID)
+		next(w, r.WithContext(ctx))
 	}
 }
