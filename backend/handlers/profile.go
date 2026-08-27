@@ -15,6 +15,12 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userID, ok := r.Context().Value(middleware.userIDKey).(string)
+	if !ok {
+		http.Error(w, "User ID not found", http.StatusUnauthorized)
+		return
+	}
+
 	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
 		http.Error(w, "Could Not Parse Form", http.StatusBadRequest)
