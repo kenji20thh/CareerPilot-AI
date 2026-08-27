@@ -12,6 +12,12 @@ import (
 
 const maxCVSize = 5 << 20 // 5MB
 
+var allowedExtensions = map[string]bool{
+	".pdf":  true,
+	".doc":  true,
+	".docx": true,
+}
+
 func UploadCV(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -47,6 +53,7 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	filename := filepath.Base(header.Filename)
+
 	path := filepath.Join("uploads", filename)
 
 	dst, err := os.Create(path)
