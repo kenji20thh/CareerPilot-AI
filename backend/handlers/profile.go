@@ -76,8 +76,9 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not generate unique filename", http.StatusInternalServerError)
 		return
 	}
+	diskFilename := uniqueSufix + ext
 
-	path := filepath.Join("uploads", filename)
+	path := filepath.Join("uploads", diskFilename)
 
 	dst, err := os.Create(path)
 	if err != nil {
@@ -96,7 +97,7 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 	err = db.Pool.QueryRow(
 		context.Background(),
 		"INSERT INTO cvs (user_id, filename, path) VALUES ($1, $2, $3) RETURNING id",
-		userID, filename, path,
+		userID, originalFilename, path,
 	).Scan(&cvID)
 
 	if err != nil {
@@ -108,7 +109,7 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"success":  true,
 		"cvId":     cvID,
-		"filename": filename,
+		"filename": originalFilename,
 		"message":  "CV uploaded successfully",
 	})
 }
