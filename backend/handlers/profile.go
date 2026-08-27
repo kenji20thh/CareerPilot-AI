@@ -69,7 +69,13 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not create uploads directory", http.StatusInternalServerError)
 		return
 	}
-	filename := filepath.Base(header.Filename)
+
+	originalFilename := header.Filename
+	uniqueSufix, err := randomHex(16)
+	if err != nil {
+		http.Error(w, "Could not generate unique filename", http.StatusInternalServerError)
+		return
+	}
 
 	path := filepath.Join("uploads", filename)
 
