@@ -3,6 +3,7 @@ package main
 import (
 	"careerpilot/db"
 	"careerpilot/handlers"
+	"careerpilot/middleware"
 	"encoding/json"
 	"net/http"
 )
@@ -33,9 +34,10 @@ func main() {
 	db.Connect()
 
 	http.HandleFunc("/api/health", withCORS(healthHandler))
-	http.HandleFunc("/api/upload-cv", withCORS(handlers.UploadCV))
+	http.HandleFunc("/api/upload-cv", withCORS(middleware.RequireAuth(handlers.UploadCV)))
 	http.HandleFunc("/api/signup", withCORS(handlers.Signup))
 	http.HandleFunc("/api/login", withCORS(handlers.Login))
+
 	println("backend running on server http://localhost:8080")
 
 	err := http.ListenAndServe(":8080", nil)
