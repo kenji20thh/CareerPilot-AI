@@ -4,6 +4,8 @@ import (
 	"careerpilot/db"
 	"careerpilot/middleware"
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"net/http"
 	"os"
@@ -17,6 +19,14 @@ var allowedExtensions = map[string]bool{
 	".pdf":  true,
 	".doc":  true,
 	".docx": true,
+}
+
+func randomHex(n int) (string, error) {
+	bytes := make([]byte, n)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(bytes), nil
 }
 
 func UploadCV(w http.ResponseWriter, r *http.Request) {
