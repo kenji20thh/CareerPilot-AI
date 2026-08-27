@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const maxCVSize = 5 << 20 // 5MB
@@ -45,6 +46,12 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 
 	if header.Size > maxCVSize {
 		http.Error(w, "File too large (max 5MB)", http.StatusBadRequest)
+		return
+	}
+
+	ext := strings.ToLower(filepath.Ext(header.Filename))
+	if !allowedExtensions[ext] {
+		http.Error(w, "Only, PDF, DOC and DOCX files are allowed", http.StatusBadRequest)
 		return
 	}
 
