@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"careerpilot/db"
+	"careerpilot/middleware"
+	"context"
 	"encoding/json"
 	"net/http"
 	"os"
@@ -15,9 +18,9 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID, ok := r.Context().Value(middleware.userIDKey).(string)
+	userID, ok := r.Context().Value(middleware.UserIDKey).(string)
 	if !ok {
-		http.Error(w, "User ID not found", http.StatusUnauthorized)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
@@ -34,10 +37,9 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// size check now that we actually have `header`
 	if header.Size > maxCVSize {
 		http.Error(w, "File too large (max 5MB)", http.StatusBadRequest)
-		return // <-- this was missing
+		return
 	}
 
 	if err := os.MkdirAll("uploads", 0755); err != nil {
@@ -60,9 +62,22 @@ func UploadCV(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var cvID string
+	err = db.Pool.QueryRow(
+		context.Background(),
+		"INSERT INTO cvs (user_id, filename, path) VALUES ($1, $2, $3) RETURNING id",
+		userID, filename, path,
+	).Scan(&cvID)
+
+	if err != nil {
+		http.Error(w, "Could not save CV record", http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"success":  true,
+		"cvId":     cvID,
 		"filename": filename,
 		"message":  "CV uploaded successfully",
 	})
