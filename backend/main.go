@@ -34,7 +34,11 @@ func main() {
 	db.Connect()
 
 	http.HandleFunc("/api/health", withCORS(healthHandler))
+
 	http.HandleFunc("/api/upload-cv", withCORS(middleware.RequireAuth(handlers.UploadCV)))
+	http.HandleFunc("/api/cvs", withCORS(middleware.RequireAuth(handlers.ListCVs)))
+	http.HandleFunc("/api/cvs/", withCORS(middleware.RequireAuth(handlers.DeleteCV)))
+
 	http.HandleFunc("/api/signup", withCORS(middleware.RateLimit(handlers.Signup)))
 	http.HandleFunc("/api/login", withCORS(middleware.RateLimit(handlers.Login)))
 	http.HandleFunc("/api/me", withCORS(middleware.RequireAuth(handlers.Me)))
