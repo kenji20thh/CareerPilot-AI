@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"careerpilot/db"
+	"careerpilot/middleware"
 	"context"
 	"encoding/json"
 	"net/http"
@@ -140,9 +141,36 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-
 func Me(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
+	userID, ok := r.Context().Value(middleware.UserIDKey).(string)
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var email string
+	var createdAt time.Time
+	err := db.Pool.QueryRow(
+		context.Background(),
+		"SELECT email, created_at FROM users WHERE id = $1",
+		userID,
+	).Scan(&email, &createdAt)
+
+	if err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"success":   true,
+		"userId":    userID,
+		"email":     email,
+		"createdAt": createdAt,
+	})
+}
