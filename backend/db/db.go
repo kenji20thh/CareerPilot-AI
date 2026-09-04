@@ -1,8 +1,8 @@
 package db
 
 import (
+	"careerpilot/logger"
 	"context"
-	"log"
 	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -14,24 +14,26 @@ var Pool *pgxpool.Pool
 func Connect() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("No .env file found, relying on system environment variables")
-
+		logger.Log.Warn("no .env file found, relying on system environment variables")
 	}
 
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
-		log.Fatal("database is not set")
+		logger.Log.Error("DATABASE_URL is not set")
+		os.Exit(1)
 	}
 
 	pool, err := pgxpool.New(context.Background(), dbURL)
 	if err != nil {
-		log.Fatal("Unable to create connection pool: %v", err)
+		logger.Log.Error("unable to create connection pool", "error", err)
+		os.Exit(1)
 	}
 
 	if err := pool.Ping(context.Background()); err != nil {
-		log.Fatal("Unable to reach database: %v", err)
+		logger.Log.Error("unable to reach database", "error", err)
+		os.Exit(1)
 	}
 
 	Pool = pool
-	log.Println("Connected to database successfully")
+	logger.Log.Info("connected to database successfully")
 }
