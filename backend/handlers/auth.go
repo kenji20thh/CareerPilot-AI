@@ -44,6 +44,16 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !emailRegex.MatchString(req.Email) {
+		http.Error(w, "Invalid email format", http.StatusBadRequest)
+		return
+	}
+
+	if len(req.Password) < minPasswordLength {
+		http.Error(w, "Password must be at least 8 characters long", http.StatusBadRequest)
+		return
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		http.Error(w, "Could not hash password", http.StatusInternalServerError)
