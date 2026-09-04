@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
+	"regexp"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -21,6 +22,8 @@ type LoginRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
 
 func Signup(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
