@@ -50,7 +50,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(req.Password) < minPasswordLength {
-		http.Error(w, "Password must be at least 8 characters long", http.StatusBadRequest)
+		http.Error(w, "Password must be at least 8 characters", http.StatusBadRequest)
 		return
 	}
 
